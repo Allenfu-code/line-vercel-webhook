@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/webhook.js": {
+      "memory": 256
+    }
+  }
+}
