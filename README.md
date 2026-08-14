@@ -1,10 +1,19 @@
-# Secure LINE Webhook
+# Secure LINE Webhook Reference
 
-A small LINE Messaging API webhook for a Cloudflare Tunnel-backed WSL service.
-It replies to text messages and demonstrates a fail-closed webhook security
-flow.
+A standalone LINE Messaging API webhook reference for a Cloudflare
+Tunnel-backed WSL service. It replies to text messages and demonstrates a
+fail-closed webhook security flow.
 
-## Architecture
+## Verification status
+
+The implementation is offline-verified by 23 tests, and its production
+dependency audit currently reports no known vulnerabilities. This repository
+is a reference service and test harness; it is **not** the active origin for my
+current LINE bot. The live hostname terminates at Hermes Gateway's separately
+configured LINE adapter, so this README does not claim a production deployment
+that cannot be reproduced from this repository alone.
+
+## Reference deployment architecture
 
 ```text
 LINE Messaging API
@@ -52,14 +61,14 @@ The test suite covers valid signatures, missing signatures, body tampering,
 oversized requests, malformed JSON, generic error responses, and the health
 endpoint. Tests use placeholder credentials and never call LINE.
 
-## Cloudflare production deployment
+## Cloudflare deployment pattern
 
-The production endpoint is designed to be public because LINE cannot complete
-an interactive login. Requests are authenticated with the LINE signature before
+A LINE endpoint must be public because the platform cannot complete an
+interactive login. Requests are authenticated with the LINE signature before
 the payload is parsed or processed.
 
 ```text
-https://line-webhook.allenfuhome.com/api/webhook
+https://your-line-subdomain.example/api/webhook
 ```
 
 `npm start` runs the origin on `127.0.0.1:6210`; it must remain loopback-only
