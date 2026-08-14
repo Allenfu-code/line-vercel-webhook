@@ -7,6 +7,7 @@ const EVENT_CONCURRENCY = 4;
 const MAX_REPLY_CHARACTERS = 5000;
 const EVENT_ID_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_EVENT_IDS = 2048;
+const LINE_API_TIMEOUT_MS = 5000;
 
 function createEventDeduper(now = Date.now) {
   const seen = new Map();
@@ -66,7 +67,12 @@ function createHandler(options = {}) {
     options.channelAccessToken ?? process.env.LINE_CHANNEL_ACCESS_TOKEN;
   const channelSecret = options.channelSecret ?? process.env.LINE_CHANNEL_SECRET;
   const createClient =
-    options.createClient ?? ((config) => new line.Client(config));
+    options.createClient ??
+    ((config) =>
+      new line.Client({
+        ...config,
+        httpConfig: { timeout: LINE_API_TIMEOUT_MS },
+      }));
   const isDuplicateEvent =
     options.isDuplicateEvent ?? createEventDeduper(options.now);
 
@@ -126,7 +132,12 @@ function createHandler(options = {}) {
       return res.status(400).json({ ok: false, error: "invalid_json" });
     }
 
-    if (!Array.isArray(body.events)) {
+    if (
+      body === null ||
+      typeof body !== "object" ||
+      Array.isArray(body) ||
+      !Array.isArray(body.events)
+    ) {
       return res.status(400).json({ ok: false, error: "invalid_payload" });
     }
     if (body.events.length > MAX_EVENTS) {
@@ -184,3 +195,4 @@ module.exports.MAX_BODY_BYTES = MAX_BODY_BYTES;
 module.exports.MAX_EVENTS = MAX_EVENTS;
 module.exports.EVENT_CONCURRENCY = EVENT_CONCURRENCY;
 module.exports.MAX_REPLY_CHARACTERS = MAX_REPLY_CHARACTERS;
+module.exports.LINE_API_TIMEOUT_MS = LINE_API_TIMEOUT_MS;

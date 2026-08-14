@@ -12,6 +12,7 @@ the LINE SDK, and only then parses JSON or calls the Messaging API. It also:
 - limits request bodies to 1 MiB;
 - limits batch size and outbound concurrency;
 - deduplicates event IDs within a warm function instance;
+- applies a five-second outbound LINE API timeout;
 - requires JSON requests;
 - keeps credentials and webhook payloads out of logs;
 - returns generic client-facing errors; and

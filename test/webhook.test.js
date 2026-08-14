@@ -155,6 +155,16 @@ test("rejects malformed JSON after signature verification", async () => {
   assert.deepEqual(res.body, { ok: false, error: "invalid_json" });
 });
 
+test("rejects a signed non-object payload", async () => {
+  const body = "null";
+  const res = response();
+
+  await handlerWith({})(request(body), res);
+
+  assert.equal(res.statusCode, 400);
+  assert.deepEqual(res.body, { ok: false, error: "invalid_payload" });
+});
+
 test("isolates event failures and does not expose or log error details", async () => {
   const handler = handlerWith({
     replyMessage: async () => {
