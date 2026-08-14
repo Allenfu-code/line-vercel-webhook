@@ -102,3 +102,7 @@ queue and datastore for idempotent asynchronous processing.
 
 - [LINE: Verify webhook signature](https://developers.line.biz/en/docs/messaging-api/verify-webhook-signature/)
 - [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/)
+
+## License
+
+This project is available under the [MIT License](LICENSE).
