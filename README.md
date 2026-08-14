@@ -4,6 +4,22 @@ A small LINE Messaging API webhook for a Cloudflare Tunnel-backed WSL service.
 It replies to text messages and demonstrates a fail-closed webhook security
 flow.
 
+## Architecture
+
+```text
+LINE Messaging API
+        |
+        | HTTPS + x-line-signature
+        v
+Cloudflare edge -> dedicated Tunnel -> 127.0.0.1:6210 -> Node.js handler
+                                              |
+                                              +-> LINE reply API
+```
+
+Only the exact webhook path is published. The origin and health endpoint stay
+on loopback, while credentials live in a permission-restricted runtime file
+outside the repository.
+
 ## Security design
 
 The handler reads the exact raw request body, verifies `x-line-signature` with

@@ -1,7 +1,7 @@
 {
   "name": "line-cloudflare-webhook",
   "version": "1.0.0",
-  "description": "",
+  "description": "Secure LINE Messaging API webhook behind a dedicated Cloudflare Tunnel",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
