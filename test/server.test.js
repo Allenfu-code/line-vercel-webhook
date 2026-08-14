@@ -1,7 +1,9 @@
 const assert = require("node:assert/strict");
 const { createHmac } = require("node:crypto");
 const { once } = require("node:events");
+const fs = require("node:fs");
 const http = require("node:http");
+const path = require("node:path");
 const { test } = require("node:test");
 
 const { createHandler, MAX_BODY_BYTES } = require("../api/webhook");
@@ -208,4 +210,11 @@ test("refuses to start the production origin without credentials", () => {
     () => startOrigin({ environment: {}, port: 6210 }),
     /configuration is incomplete/
   );
+});
+
+test("keeps legacy Vercel Git deployments disabled", () => {
+  const configuration = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "..", "vercel.json"), "utf8")
+  );
+  assert.equal(configuration.git?.deploymentEnabled, false);
 });
