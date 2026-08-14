@@ -1,0 +1,8 @@
+tunnel: REPLACE_WITH_TUNNEL_UUID
+credentials-file: REPLACE_WITH_PRIVATE_CREDENTIAL_PATH
+
+ingress:
+  - hostname: line-webhook.allenfuhome.com
+    path: ^/api/webhook$
+    service: http://127.0.0.1:6210
+  - service: http_status:404

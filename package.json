@@ -1,9 +1,10 @@
 {
-  "name": "line-vercel-webhook",
+  "name": "line-cloudflare-webhook",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "node --test",
     "audit": "npm audit --omit=dev"
   },

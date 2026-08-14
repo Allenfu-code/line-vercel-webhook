@@ -1,7 +1,8 @@
-# Secure LINE Webhook on Vercel
+# Secure LINE Webhook
 
-A small LINE Messaging API webhook for Vercel Functions. It replies to text
-messages and demonstrates a fail-closed webhook security flow.
+A small LINE Messaging API webhook for a Cloudflare Tunnel-backed WSL service.
+It replies to text messages and demonstrates a fail-closed webhook security
+flow.
 
 ## Security design
 
@@ -35,18 +36,43 @@ The test suite covers valid signatures, missing signatures, body tampering,
 oversized requests, malformed JSON, generic error responses, and the health
 endpoint. Tests use placeholder credentials and never call LINE.
 
-## Deploying to Vercel
+## Cloudflare production deployment
 
-Set these as encrypted Vercel environment variables. Never commit their values.
+The production endpoint is designed to be public because LINE cannot complete
+an interactive login. Requests are authenticated with the LINE signature before
+the payload is parsed or processed.
+
+```text
+https://line-webhook.allenfuhome.com/api/webhook
+```
+
+`npm start` runs the origin on `127.0.0.1:6210`; it must remain loopback-only
+behind its dedicated Cloudflare Tunnel. It refuses to start unless both LINE
+credentials are configured. Store them outside the repository in the private
+systemd environment file `~/.config/line-webhook/line-webhook.env` with mode
+`0600`:
 
 ```text
 LINE_CHANNEL_ACCESS_TOKEN
 LINE_CHANNEL_SECRET
 ```
 
-Deploy `api/webhook.js`, then use **Verify** in the LINE Developers Console.
-An unsigned request must receive HTTP 401, while LINE's signed verification
-request must succeed.
+On the WSL host, enter them without terminal echo or shell-history exposure:
+
+```bash
+./scripts/configure-secrets.sh
+```
+
+Do not paste either value into an issue, pull request, chat, command argument,
+or deployment log.
+
+The origin exposes `GET /healthz` for local infrastructure checks and supports
+both `GET` and `POST` on `/api/webhook`. The Tunnel publishes only the webhook
+path; health and all unrelated paths remain private.
+
+After deployment, use **Verify** in the LINE Developers Console. An unsigned
+request must receive HTTP 401, while LINE's signed verification request must
+succeed.
 
 For production, add rate limiting at the edge and review logs without recording
 message bodies, reply tokens, user IDs, or credentials.
@@ -59,4 +85,4 @@ queue and datastore for idempotent asynchronous processing.
 ## References
 
 - [LINE: Verify webhook signature](https://developers.line.biz/en/docs/messaging-api/verify-webhook-signature/)
-- [Vercel: Raw request bodies](https://vercel.com/kb/guide/how-do-i-get-the-raw-body-of-a-serverless-function)
+- [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/)

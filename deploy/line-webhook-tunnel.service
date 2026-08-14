@@ -1,0 +1,25 @@
+[Unit]
+Description=Cloudflare Tunnel for LINE webhook
+After=network-online.target line-webhook.service
+Wants=network-online.target
+Requires=line-webhook.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/cloudflared --no-autoupdate tunnel --config %h/services/line-webhook/deploy/cloudflared.yml run
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+UMask=0077
+
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+KeyringMode=private
+
+[Install]
+WantedBy=default.target

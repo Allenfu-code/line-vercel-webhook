@@ -1,0 +1,28 @@
+[Unit]
+Description=LINE webhook origin
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/services/line-webhook/app
+ExecStart=/usr/bin/node %h/services/line-webhook/app/server.js
+Environment=NODE_ENV=production
+Environment=PORT=6210
+EnvironmentFile=%h/.config/line-webhook/line-webhook.env
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+UMask=0077
+
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+KeyringMode=private
+
+[Install]
+WantedBy=default.target
