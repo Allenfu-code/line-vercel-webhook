@@ -70,10 +70,6 @@ The origin exposes `GET /healthz` for local infrastructure checks and supports
 both `GET` and `POST` on `/api/webhook`. The Tunnel publishes only the webhook
 path; health and all unrelated paths remain private.
 
-The minimal `vercel.json` is a retirement guard only: it disables every
-Git-triggered Vercel deployment while the legacy project is being disconnected.
-It does not define or host the production service.
-
 After deployment, use **Verify** in the LINE Developers Console. An unsigned
 request must receive HTTP 401, while LINE's signed verification request must
 succeed.

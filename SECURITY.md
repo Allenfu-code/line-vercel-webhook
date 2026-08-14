@@ -4,9 +4,6 @@ Do not commit LINE credentials or production webhook payloads. Store
 `LINE_CHANNEL_ACCESS_TOKEN` and `LINE_CHANNEL_SECRET` only in a private systemd
 environment file outside the repository.
 
-Keep `git.deploymentEnabled` set to `false` in `vercel.json` until the legacy
-Vercel project has been deleted or disconnected from this repository.
-
 All webhook requests must pass `x-line-signature` validation against the exact
 raw request body before JSON parsing or event processing. Keep request and
 response bodies, access tokens, channel secrets, reply tokens, and user IDs out
